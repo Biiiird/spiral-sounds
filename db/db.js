@@ -4,7 +4,7 @@ import path from 'node:path'
 
 export async function getDBConnection() {
 
-const dbPath = path.join('database.db')
+const dbPath = process.env.DB_PATH || path.join('database.db')
 
  return open({
    filename: dbPath,

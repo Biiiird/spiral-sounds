@@ -61,7 +61,9 @@ This runs `node server.js`, which starts the server at [http://localhost:8000](h
 
 ### Configuration
 
-- `SPIRAL_SESSION_SECRET` — optional environment variable to override the session cookie signing secret (a default is used otherwise; set this in any real deployment).
+- `SPIRAL_SESSION_SECRET` — session cookie signing secret. Optional in development (a default is used); required when `NODE_ENV=production`, otherwise the server refuses to start.
+- `NODE_ENV=production` — marks session cookies `Secure` (HTTPS only). The app trusts the first proxy hop, so run it behind an HTTPS reverse proxy such as nginx.
+- `DB_PATH` — path to the SQLite file (defaults to `database.db` in the project root). In production, point this at a copy outside the repo so runtime writes never conflict with `git pull`; the committed `database.db` serves as seed data.
 
 ### Inspecting the database
 

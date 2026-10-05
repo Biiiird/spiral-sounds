@@ -7,17 +7,25 @@ import session from 'express-session'
 
 const app = express() 
 const PORT = 8000
+const isProduction = process.env.NODE_ENV === 'production'
+
+if (isProduction && !process.env.SPIRAL_SESSION_SECRET) {
+  throw new Error('SPIRAL_SESSION_SECRET must be set in production')
+}
 const secret = process.env.SPIRAL_SESSION_SECRET || 'jellyfish-baskingshark'
 
-app.use(express.json()) 
+// Behind nginx: lets express-session see HTTPS via X-Forwarded-Proto
+app.set('trust proxy', 1)
+
+app.use(express.json())
 
 app.use(session({
   secret: secret,
-  resave: false, 
+  resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: false,
+    secure: isProduction,
     sameSite: 'lax'
   }
 }))
